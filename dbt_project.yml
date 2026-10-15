@@ -17,7 +17,7 @@ vars:
   raw_database: INTERVIEW              # database that holds the uploaded tables
   raw_schema: PUBLIC                   # schema that holds them
   raw_orders_table: ORDERS
-  raw_line_items_table: LINE_ITEMS
+  raw_line_items_table: ITEMS
 
 models:
   print_orders:
