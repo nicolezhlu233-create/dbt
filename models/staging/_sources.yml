@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Your two uploaded tables. Edit the raw_* values in dbt_project.yml if the names differ."
+    database: "{{ var('raw_database') }}"
+    schema: "{{ var('raw_schema') }}"
+    tables:
+      - name: orders_raw
+        identifier: "{{ var('raw_orders_table') }}"
+        columns:
+          - name: order_id
+            description: >
+              Composite key written as shop_id.order_number. MUST be VARCHAR:
+              '3558273.1' and '3558273.10' are different orders but identical as numbers.
+            tests: [not_null]
+      - name: line_items_raw
+        identifier: "{{ var('raw_line_items_table') }}"
+        columns:
+          - name: order_id
+            description: "VARCHAR as well, so it joins to orders without any conversion."
+            tests: [not_null]

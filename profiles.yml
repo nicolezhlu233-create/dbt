@@ -1,0 +1,12 @@
+# Profile for running dbt INSIDE Snowflake. The name must match "profile:" in dbt_project.yml.
+fyul_interview:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: ACCOUNTADMIN
+      warehouse: COMPUTE_WH
+      database: INTERVIEW
+      schema: CLEAN        # <-- dbt creates this NEW schema and puts every result there.
+                           #     Do NOT use PUBLIC: that is where your raw uploads live.
+      threads: 8

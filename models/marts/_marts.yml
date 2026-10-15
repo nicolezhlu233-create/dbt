@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: orders_clean
+    description: "One row per order after cleaning. dq_flags lists every fix / warning applied to the row."
+    columns:
+      - name: order_id
+        description: "shop_id.order_number. TEXT - never cast to a number (354 orders would merge)."
+        tests: [unique, not_null]
+      - name: shop_id
+        tests: [not_null]
+      - name: merchant_id
+        tests: [not_null]
+      - name: order_dt
+        tests: [not_null]
+      - name: sub_plan
+        tests:
+          - accepted_values:
+              values: ['business_account_1', 'business_account_2', 'business_account_3', 'business_account_5']
+      - name: total_cost
+        tests: [not_null]
+      - name: is_zero_value_order
+        description: "TRUE when cost and shipping are both 0. Mostly cancelled / never-fulfilled orders."
+
+  - name: line_items_clean
+    description: "One row per line item. Identical rows within an order are kept (they are separate units)."
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('orders_clean')
+              field: order_id
+      - name: line_no
+        tests: [not_null]
+      - name: quantity
+        tests: [not_null]
+
+  - name: orders_rejected
+    description: "Duplicate order rows removed from orders (exact copies and lower-quality conflicting copies)."
+    columns:
+      - name: reason
+        tests:
+          - accepted_values:
+              values: ['exact_duplicate', 'conflicting_duplicate']

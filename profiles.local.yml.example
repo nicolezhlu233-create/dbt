@@ -1,0 +1,14 @@
+# ONLY for running dbt from your own machine (dbt-snowflake). NOT used inside Snowflake - see profiles.yml.
+print_orders:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"      # e.g. xy12345.eu-west-1
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORMER') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'ANALYTICS') }}"
+      schema: dbt_dev          # models are built here; raw tables stay in schema RAW
+      threads: 4

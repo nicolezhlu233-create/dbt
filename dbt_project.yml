@@ -1,0 +1,39 @@
+name: print_orders
+version: '1.0.0'
+config-version: 2
+profile: fyul_interview
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+vars:
+  # Date the source extract was taken. Anything dated after this is treated as invalid.
+  # (Assumed 2022-11-16 = file timestamp. Change if you know the real extract date.)
+  data_cutoff: '2022-11-16'
+
+  # WHERE YOUR UPLOADED TABLES LIVE  <-- edit these 4 values (find them with: SHOW TABLES LIKE '%ORDER%' IN ACCOUNT;)
+  raw_database: INTERVIEW              # database that holds the uploaded tables
+  raw_schema: PUBLIC                   # schema that holds them
+  raw_orders_table: ORDERS
+  raw_line_items_table: LINE_ITEMS
+
+models:
+  print_orders:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: table
+    marts:
+      +materialized: table
+
+seeds:
+  print_orders:
+    # Force text so codes like 'NE' / 'NO' are never interpreted as booleans/nulls
+    ref_carrier:
+      +column_types: {carrier: varchar}
+    ref_region_code:
+      +column_types: {country: varchar, code: varchar, name: varchar}
+    ref_region_alias:
+      +column_types: {country: varchar, alias_key: varchar, code: varchar}
