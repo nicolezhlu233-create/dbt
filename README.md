@@ -1,6 +1,6 @@
-# fyul_interview – dbt project (Snowflake)
+# dbt project (Snowflake)
 
-Turns your two raw tables (orders, line items) into clean tables you can analyse.
+Turns two raw tables (orders, line items) into clean tables.
 
 ## What you get (all in INTERVIEW.CLEAN)
 | Table | Use it for |
@@ -9,7 +9,6 @@ Turns your two raw tables (orders, line items) into clean tables you can analyse
 | `LINE_ITEMS_CLEAN`  | one row per item in an order (join to orders on `order_id`) |
 | `ORDERS_REJECTED`   | the 740 duplicate order rows that were removed (nothing is silently lost) |
 
-Your raw tables are never modified.
 
 ## Setup (once)
 1. `dbt_project.yml` -> check the four `raw_*` values: database, schema and the two table names of your uploaded data.
